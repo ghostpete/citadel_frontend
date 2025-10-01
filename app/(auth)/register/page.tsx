@@ -18,6 +18,7 @@ type FormValues = {
   region?: string;
   city?: string;
   currency?: string;
+  phone?: string;
 };
 
 const SignUpPage = () => {
@@ -30,6 +31,7 @@ const SignUpPage = () => {
     region?: string;
     city?: string;
     currency?: string;
+    country_calling_code?: string;
   }>({});
 
   const router = useRouter();
@@ -51,10 +53,11 @@ const SignUpPage = () => {
       region: "",
       city: "",
       currency: "",
+      phone: "",
     },
   });
 
-  // ✅ Detect country, region, city, and currency on mount
+  // ✅ Detect location (country, region, city, currency, phone code)
   useEffect(() => {
     const fetchLocation = async () => {
       try {
@@ -66,10 +69,11 @@ const SignUpPage = () => {
             region: data.region,
             city: data.city,
             currency: data.currency,
+            country_calling_code: data.country_calling_code,
           };
           setLocationData(loc);
 
-          // auto-fill form values
+          // Auto-fill hidden fields
           setValue("country", loc.country || "");
           setValue("region", loc.region || "");
           setValue("city", loc.city || "");
@@ -87,6 +91,10 @@ const SignUpPage = () => {
     try {
       setLoading(true);
 
+      // Combine phone code + phone number
+      const fullPhone =
+        (locationData.country_calling_code || "") + (data.phone || "");
+
       const response = await fetch(`${BACKEND_URL}/register/`, {
         method: "POST",
         headers: {
@@ -101,6 +109,7 @@ const SignUpPage = () => {
           region: data.region || locationData.region,
           city: data.city || locationData.city,
           currency: data.currency || locationData.currency,
+          phone: fullPhone,
         }),
       });
 
@@ -130,6 +139,7 @@ const SignUpPage = () => {
       style={{ backgroundImage: "url(/bg_auth.png)" }}
       className="font-poppins min-h-screen bg-center bg-cover"
     >
+      {/* Header */}
       <div className="flex items-center bg-teal-900 text-white px-4 py-3">
         <Link href="/menu">
           <ArrowLeft className="w-6 h-6 mr-3" />
@@ -137,18 +147,21 @@ const SignUpPage = () => {
         <h1 className="text-lg font-semibold">Sign Up</h1>
       </div>
 
-      <div className="flex flex-col bg-white border p-5 md:rounded-xl max-w-full md:max-w-xl mx-auto h-screen md:h-fit md:mb-10 md:mt-10 w-full">
+      {/* Main Container */}
+      <div className="flex flex-col border shadow-md bg-white p-5 md:rounded-xl max-w-full md:max-w-xl mx-auto md:h-fit md:mb-10 md:mt-10 w-full">
         <div className="px-4 py-3">
-          <h2 className="text-3xl font-bold text-teal-900">Sign Up</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-teal-900">
+            Sign Up
+          </h2>
         </div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-1 px-4 py-6 space-y-6 max-w-[1000px]"
+          className="flex-1 px-4 py-6 space-y-5 md:space-y-6"
         >
           {/* First Name */}
           <div>
-            <label className="block text-gray-500">First Name: </label>
+            <label className="block text-gray-500">First Name</label>
             <input
               type="text"
               {...register("firstName", { required: "First Name is required" })}
@@ -161,7 +174,7 @@ const SignUpPage = () => {
 
           {/* Last Name */}
           <div>
-            <label className="block text-gray-500">Last Name: </label>
+            <label className="block text-gray-500">Last Name</label>
             <input
               type="text"
               {...register("lastName", { required: "Last Name is required" })}
@@ -174,7 +187,7 @@ const SignUpPage = () => {
 
           {/* Email */}
           <div>
-            <label className="block text-gray-500">Email: </label>
+            <label className="block text-gray-500">Email</label>
             <input
               type="email"
               {...register("email", {
@@ -193,7 +206,7 @@ const SignUpPage = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-gray-500">Password: </label>
+            <label className="block text-gray-500">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -209,12 +222,12 @@ const SignUpPage = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+                className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-800"
               >
                 {showPassword ? (
-                  <EyeOff className="w-5 h-5 md:w-7 md:h-7" />
+                  <EyeOff className="w-5 h-5 md:w-6 md:h-6" />
                 ) : (
-                  <Eye className="w-5 h-5 md:w-7 md:h-7" />
+                  <Eye className="w-5 h-5 md:w-6 md:h-6" />
                 )}
               </button>
             </div>
@@ -225,7 +238,7 @@ const SignUpPage = () => {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-gray-500">Confirm Password: </label>
+            <label className="block text-gray-500">Confirm Password</label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
@@ -239,12 +252,12 @@ const SignUpPage = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+                className="absolute inset-y-0 right-2 flex items-center text-gray-600 hover:text-gray-800"
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="w-5 h-5 md:w-7 md:h-7" />
+                  <EyeOff className="w-5 h-5 md:w-6 md:h-6" />
                 ) : (
-                  <Eye className="w-5 h-5 md:w-7 md:h-7" />
+                  <Eye className="w-5 h-5 md:w-6 md:h-6" />
                 )}
               </button>
             </div>
@@ -255,54 +268,78 @@ const SignUpPage = () => {
             )}
           </div>
 
-          {/* Country (Auto-filled) */}
+          {/* Phone Number */}
           <div>
-            <label className="block text-gray-500">Country: </label>
-            <input
-              type="text"
-              {...register("country")}
-              value={locationData.country || ""}
-              readOnly
-              className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
-            />
+            <label className="block text-gray-500">Phone Number</label>
+            <div className="flex max-w-full">
+              {/* Country Calling Code */}
+              <input
+                type="text"
+                value={locationData.country_calling_code || ""}
+                readOnly
+                className="w-16 md:w-20 border-b p-2 outline-none text-gray-500 bg-gray-100 mr-2 text-center"
+              />
+              {/* User Phone Input */}
+              <input
+                type="tel"
+                {...register("phone", { required: "Phone number is required" })}
+                className="flex-1 min-w-0 border-b p-2 outline-none text-gray-800 overflow-hidden"
+                placeholder="8123456789"
+              />
+            </div>
+            {errors.phone && (
+              <p className="text-red-500 text-sm">{errors.phone.message}</p>
+            )}
           </div>
 
-          {/* Region */}
-          <div>
-            <label className="block text-gray-500">Region: </label>
-            <input
-              type="text"
-              {...register("region")}
-              value={locationData.region || ""}
-              readOnly
-              className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
-            />
+          {/* Auto-filled Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-500">Country</label>
+              <input
+                type="text"
+                {...register("country")}
+                value={locationData.country || ""}
+                readOnly
+                className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-500">Region</label>
+              <input
+                type="text"
+                {...register("region")}
+                value={locationData.region || ""}
+                readOnly
+                className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-500">City</label>
+              <input
+                type="text"
+                {...register("city")}
+                value={locationData.city || ""}
+                readOnly
+                className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-500">Currency</label>
+              <input
+                type="text"
+                {...register("currency")}
+                value={locationData.currency || ""}
+                readOnly
+                className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
+              />
+            </div>
           </div>
 
-          {/* City */}
-          <div>
-            <label className="block text-gray-500">City: </label>
-            <input
-              type="text"
-              {...register("city")}
-              value={locationData.city || ""}
-              readOnly
-              className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
-            />
-          </div>
-
-          {/* Currency */}
-          <div>
-            <label className="block text-gray-500">Currency: </label>
-            <input
-              type="text"
-              {...register("currency")}
-              value={locationData.currency || ""}
-              readOnly
-              className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
-            />
-          </div>
-
+          {/* Login Link */}
           <div className="flex flex-col">
             <Link className="text-teal-900 inline-block" href={"/login"}>
               Already have an account?{" "}
@@ -310,6 +347,7 @@ const SignUpPage = () => {
             </Link>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}

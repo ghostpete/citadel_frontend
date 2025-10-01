@@ -4,6 +4,17 @@
 html {
   /* font-size: 11px; */
 }
+/* Remove autofill background + shadow */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #1f2937 !important; /* Tailwind text-gray-800 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 
 @custom-variant dark (&:is(.dark *));
 

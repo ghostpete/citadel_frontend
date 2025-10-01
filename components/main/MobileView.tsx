@@ -96,31 +96,7 @@ export default function MarketWatch() {
   console.log(pathname);
 
   return (
-    <div className="h-screen flex bg-white text-sm">
-      {/* Desktop Sidebar (unchanged) */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-20 lg:border-r bg-white items-center py-4 space-y-6 shadow-sm">
-        {[
-          { name: "Instruments", icon: BarChart2, href: "/" },
-          { name: "COOMA", icon: Users, href: "/social" },
-          { name: "Portfolio", icon: Briefcase, href: "/portfolio" },
-          { name: "Wallet", icon: Wallet, href: "/portfolio" },
-          { name: "Menu", icon: Menu, href: "/menu" },
-        ].map(({ name, icon: Icon, href }) => (
-          <button
-            key={name}
-            onClick={() => router.push(href)}
-            className={`flex flex-col items-center transition ${
-              pathname === href
-                ? "text-[#00B074]"
-                : "text-gray-500 hover:text-green-500"
-            }`}
-          >
-            <Icon size={24} />
-            <span className="text-[10px] mt-1">{name}</span>
-          </button>
-        ))}
-      </aside>
-
+    <>
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
@@ -165,7 +141,7 @@ export default function MarketWatch() {
             <div
               onClick={() => {
                 setInstrument(item);
-                router.push("/instrument");
+                router.push(`/instrument/${item.symbol}`);
               }}
               key={item.symbol}
               className="cursor-pointer px-3 py-2 border-b flex items-center justify-between hover:bg-gray-50 transition"
@@ -204,28 +180,6 @@ export default function MarketWatch() {
           ))}
         </div>
       </div>
-
-      {/* Mobile Bottom Nav */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 border-t flex justify-around items-center bg-teal-900 shadow-inner">
-        {[
-          { name: "Instruments", icon: BarChart2, href: "/" },
-          { name: "COOMA", icon: Users, href: "/social" },
-          { name: "Portfolio", icon: Briefcase, href: "/portfolio" },
-          { name: "Wallet", icon: Wallet, href: "/wallet" },
-          { name: "Menu", icon: Menu, href: "/menu" },
-        ].map(({ name, icon: Icon }) => (
-          <button
-            key={name}
-            onClick={() => setActiveNav(name)}
-            className={`flex flex-col items-center transition ${
-              activeNav === name ? "text-white" : "text-white/80"
-            }`}
-          >
-            <Icon size={22} />
-            <span className="text-[11px]">{name}</span>
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }

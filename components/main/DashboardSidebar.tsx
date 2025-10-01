@@ -8,7 +8,7 @@ const DashboardSidebar = () => {
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-20 lg:border-r bg-white py-6 space-y-6 shadow-sm fixed top-0 left-0 h-screen">
       {[
-        { name: "Instruments", icon: BarChart2, href: "/" },
+        { name: "Instruments", icon: BarChart2, href: "/instrument" },
         { name: "COOMA", icon: Users, href: "/social" },
         { name: "Portfolio", icon: Briefcase, href: "/portfolio" },
         { name: "Deposit", icon: Wallet, href: "/deposit" },

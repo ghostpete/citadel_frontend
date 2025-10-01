@@ -9,7 +9,7 @@ const DashboardBottomTab = () => {
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 h-16 border-t flex justify-around items-center bg-teal-900 shadow-inner">
       {[
-        { name: "Instruments", icon: BarChart2, href: "/" },
+        { name: "Instruments", icon: BarChart2, href: "/instrument" },
         { name: "COOMA", icon: Users, href: "/social" },
         { name: "Portfolio", icon: Briefcase, href: "/portfolio" },
         { name: "Deposit", icon: Wallet, href: "/deposit" },

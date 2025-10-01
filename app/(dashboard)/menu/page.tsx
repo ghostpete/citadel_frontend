@@ -11,6 +11,7 @@ import {
   Key,
   CheckCircle,
   CircleDollarSign,
+  CirclePoundSterling,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -18,6 +19,7 @@ const menuItems = [
   { label: "Personal Details", icon: User, href: "/profile-details" },
   { label: "Transaction History", icon: History, href: "/history" },
   { label: "Wallet", icon: Wallet, href: "/portfolio" },
+  { label: "Payments", icon: CirclePoundSterling, href: "/payments" },
   { label: "Service Desk", icon: HelpCircle, href: "/service" },
   { label: "Withdraw", icon: CircleDollarSign, href: "/withdraw" },
   { label: "Change Password", icon: Key, href: "/change-password" },
@@ -30,9 +32,10 @@ const menuItems = [
 ];
 
 export default function MenuPage() {
+  const { error, loading, user } = useUserProfile();
 
+  console.log(user);
 
-  const {error, loading, user} = useUserProfile();
   const logoutAction = () => {
     localStorage.removeItem("authToken");
     window.location.href = "/login";
@@ -47,7 +50,9 @@ export default function MenuPage() {
             {getFirstLetter(user?.first_name)}
           </div>
           <div>
-            <h2 className="font-semibold text-lg">{user?.first_name} {user?.last_name}</h2>
+            <h2 className="font-semibold text-lg">
+              {user?.first_name} {user?.last_name}
+            </h2>
             <p className="text-sm flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
               Live account

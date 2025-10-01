@@ -9,8 +9,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         {/* Desktop Sidebar (fixed) */}
         <DashboardSidebar />
 
-        {/* Main content (scrollable) */}
-        <div className="w-full lg:ml-20 overflow-y-auto">{children}</div>
+        {/* Main content (scrollable) - overflow-y-auto */}
+        <div className="w-full lg:ml-20">{children}</div>
 
         {/* Mobile Bottom Nav */}
         <DashboardBottomTab />

@@ -20,3 +20,20 @@ export const formatHighNumbersInCompact = (num?: number) => {
     maximumFractionDigits: 1,
   }).format(num);
 };
+
+
+
+export function formatDate(dateString: string, locale: string = "en-US") {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+
+  // Example: "Sep 30, 2025, 3:03 PM"
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
