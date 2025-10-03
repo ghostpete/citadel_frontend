@@ -2,11 +2,8 @@ export const ALPHA_ADVANTAGE_API_KEY = process.env.ALPHA_ADVANTAGE_API_KEY;
 
 export const BACKEND_URL = process.env.NEXT_PUBLIC_APP_BACKEND_URL;
 
-
-
-
 // Grouped instruments (like desktop Sidebar)
-const assets = {
+export const assets = {
   Forex: [
     {
       symbol: "EURUSD",

@@ -2,6 +2,13 @@
 
 import { useEffect, useRef } from "react";
 
+// Declare TradingView globally so TypeScript knows about it
+declare global {
+  interface Window {
+    TradingView: any;
+  }
+}
+
 export default function TradingChart({ symbol }: { symbol?: string | null }) {
   const container = useRef<HTMLDivElement>(null);
 
@@ -15,17 +22,18 @@ export default function TradingChart({ symbol }: { symbol?: string | null }) {
     script.src = "https://s3.tradingview.com/tv.js";
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
-      new TradingView.widget({
-        autosize: true,
-        symbol: symbol,
-        interval: "1",
-        timezone: "Etc/UTC",
-        theme: "light",
-        style: "1",
-        locale: "en",
-        container_id: "tradingview_chart",
-      });
+      if (window.TradingView) {
+        new window.TradingView.widget({
+          autosize: true,
+          symbol: symbol || "EURUSD", // fallback if null
+          interval: "1",
+          timezone: "Etc/UTC",
+          theme: "light",
+          style: "1",
+          locale: "en",
+          container_id: "tradingview_chart",
+        });
+      }
     };
 
     container.current.appendChild(script);

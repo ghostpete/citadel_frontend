@@ -1,9 +1,8 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Inbox } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
-import { Inbox } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -16,12 +15,23 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BACKEND_URL as BACKEND_URL_API } from "@/lib/constants";
-import Image from "next/image";
 
 const BACKEND_URL = BACKEND_URL_API || "http://localhost:8000";
 
+// Transaction type
+interface Transaction {
+  id: number;
+  reference: string;
+  transaction_type: string;
+  amount: number;
+  status: "successful" | "pending" | "failed" | string;
+  created_at: string;
+}
+
 // fetcher helper
-const fetcher = async (url: string) => {
+const fetcher = async (
+  url: string
+): Promise<{ transactions: Transaction[] }> => {
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -36,12 +46,12 @@ const fetcher = async (url: string) => {
 
 const TransactionHistory = () => {
   const router = useRouter();
-  const { data, error, isLoading } = useSWR(
+  const { data, error, isLoading } = useSWR<{ transactions: Transaction[] }>(
     `${BACKEND_URL}/transactions/`,
     fetcher
   );
 
-  const transactions = data?.transactions || [];
+  const transactions: Transaction[] = data?.transactions || [];
 
   const statusColor = (status: string) => {
     switch (status) {
@@ -88,7 +98,6 @@ const TransactionHistory = () => {
         {/* No transactions */}
         {!isLoading && transactions.length === 0 && (
           <div className="flex flex-col items-center justify-center mt-20 text-center">
-            
             <Inbox className="w-15 h-15 md:w-20 md:h-20 text-gray-300 mx-auto" />
             <h2 className="text-lg font-semibold text-gray-700">
               No Transactions Found
@@ -119,7 +128,7 @@ const TransactionHistory = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {transactions.map((txn: any, index: number) => (
+                    {transactions.map((txn, index) => (
                       <TableRow key={txn.id}>
                         <TableCell className="font-medium">
                           {index + 1}
@@ -153,7 +162,7 @@ const TransactionHistory = () => {
         {/* Mobile Cards */}
         {transactions.length > 0 && (
           <div className="space-y-3 sm:hidden mb-20">
-            {transactions.map((txn: any, index: number) => (
+            {transactions.map((txn, index) => (
               <Card key={txn.id}>
                 <CardContent className="p-4 py-2">
                   <div className="bg-teal-900 text-white w-8 h-8 flex items-center justify-center rounded-full mb-3">

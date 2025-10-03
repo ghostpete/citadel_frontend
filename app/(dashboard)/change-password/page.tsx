@@ -65,8 +65,12 @@ const ChangePassword = () => {
         text: result.success || "Password changed successfully ✅",
       });
       reset();
-    } catch (err: any) {
-      setMessage({ type: "error", text: err.message });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setMessage({ type: "error", text: err.message });
+      } else {
+        setMessage({ type: "error", text: "Something went wrong" });
+      }
     } finally {
       setLoading(false);
     }

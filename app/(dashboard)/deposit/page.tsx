@@ -37,15 +37,71 @@ type DepositForm = {
   receipt: File | null;
 };
 
+// Dropzone extracted into its own component
+const DropzoneField = ({
+  value,
+  onChange,
+  error,
+}: {
+  value: File | null;
+  onChange: (file: File | null) => void;
+  error?: string;
+}) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { "image/*": [], "application/pdf": [] },
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      onChange(acceptedFiles[0]);
+    },
+  });
+
+  return (
+    <div className="w-full">
+      <div
+        {...getRootProps()}
+        className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition ${
+          isDragActive ? "border-teal-700 bg-teal-50" : "border-gray-300"
+        }`}
+      >
+        <input {...getInputProps()} />
+        {value ? (
+          value.type.startsWith("image/") ? (
+            <div className="flex flex-col items-center">
+              <Image
+                src={URL.createObjectURL(value)}
+                alt="Receipt Preview"
+                width={200}
+                height={200}
+                unoptimized
+                className="max-h-48 rounded-lg shadow-md mb-2 object-contain"
+              />
+              <p className="text-sm text-gray-700">{value.name}</p>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-800">
+              Selected: <span className="font-medium">{value.name}</span>
+            </p>
+          )
+        ) : (
+          <p className="text-sm text-gray-600">
+            Drag & drop receipt here, or click to upload
+          </p>
+        )}
+      </div>
+      {error && <p className="text-red-600 text-xs mt-1">{error}</p>}
+    </div>
+  );
+};
+
 const DepositPage = () => {
   const router = useRouter();
-  const { user } = useUserProfile();
+  const { user: _user } = useUserProfile(); // prefixed to avoid ESLint unused var error
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<AdminWallet | null>(
     null
   );
   const [loading, setLoading] = useState(false);
-  const [unit, setUnit] = useState<string>(""); // user input
+  const [unit, setUnit] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -66,7 +122,6 @@ const DepositPage = () => {
         if (res.ok) {
           const data: AdminWallet[] = await res.json();
           setWallets(data);
-          console.log(data);
         }
       } catch (err) {
         console.error("Error fetching wallets:", err);
@@ -87,7 +142,6 @@ const DepositPage = () => {
     }
   };
 
-  // Derived amount = unit * wallet.amount
   const calculatedAmount =
     selectedWallet && unit
       ? (parseFloat(unit) * parseFloat(selectedWallet.amount || "0")).toString()
@@ -113,7 +167,7 @@ const DepositPage = () => {
       });
 
       if (!res.ok) throw new Error("Deposit failed");
-      
+
       const result = await res.json();
       console.log("Deposit success:", result);
 
@@ -121,7 +175,7 @@ const DepositPage = () => {
       setUnit("");
       setOpen(false);
       alert(
-        "Transaction made successfully. Your deposits are pending at the the moment."
+        "Transaction made successfully. Your deposits are pending at the moment."
       );
       router.push("/history");
     } catch (err) {
@@ -176,7 +230,7 @@ const DepositPage = () => {
           className="mt-4 border p-2 py-3 rounded-none"
         />
 
-        {/* Calculated Amount (disabled) */}
+        {/* Calculated Amount */}
         <Input
           type="text"
           placeholder="Calculated amount in $"
@@ -252,62 +306,18 @@ const DepositPage = () => {
               name="receipt"
               control={control}
               rules={{ required: "You must upload a receipt" }}
-              render={({ field: { onChange, value } }) => {
-                const { getRootProps, getInputProps, isDragActive } =
-                  useDropzone({
-                    accept: { "image/*": [], "application/pdf": [] },
-                    multiple: false,
-                    onDrop: (acceptedFiles) => {
-                      onChange(acceptedFiles[0]);
-                    },
-                  });
-
-                return (
-                  <div className="w-full">
-                    <div
-                      {...getRootProps()}
-                      className={`w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition ${
-                        isDragActive
-                          ? "border-teal-700 bg-teal-50"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <input {...getInputProps()} />
-                      {value ? (
-                        value.type.startsWith("image/") ? (
-                          <div className="flex flex-col items-center">
-                            <img
-                              src={URL.createObjectURL(value)}
-                              alt="Receipt Preview"
-                              className="max-h-48 rounded-lg shadow-md mb-2"
-                            />
-                            <p className="text-sm text-gray-700">
-                              {value.name}
-                            </p>
-                          </div>
-                        ) : (
-                          <p className="text-sm text-gray-800">
-                            Selected:{" "}
-                            <span className="font-medium">{value.name}</span>
-                          </p>
-                        )
-                      ) : (
-                        <p className="text-sm text-gray-600">
-                          Drag & drop receipt here, or click to upload
-                        </p>
-                      )}
-                    </div>
-                    {errors.receipt && (
-                      <p className="text-red-600 text-xs mt-1">
-                        {errors.receipt.message}
-                      </p>
-                    )}
-                  </div>
-                );
-              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <DropzoneField
+                  value={value}
+                  onChange={onChange}
+                  error={error?.message}
+                />
+              )}
             />
 
-            {/* Submit */}
             <Button
               type="submit"
               disabled={loading}

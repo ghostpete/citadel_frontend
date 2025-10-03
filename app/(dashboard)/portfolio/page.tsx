@@ -10,11 +10,26 @@ import { cn, formatHighNumbersInCompact, getFirstLetter } from "@/lib/utils";
 import { BACKEND_URL as BACKEND_URL_API } from "@/lib/constants";
 import useSWR from "swr";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const BACKEND_URL = BACKEND_URL_API;
 
+// Transaction type definition
+interface Transaction {
+  id: number;
+  reference: string;
+  transaction_type: string;
+  amount: number;
+  status: "pending" | "successful" | "failed";
+  created_at: string;
+}
+
+type Filter = "all" | "pending" | "successful" | "failed";
+
 // fetcher helper
-const fetcher = async (url: string) => {
+const fetcher = async (
+  url: string
+): Promise<{ transactions: Transaction[] }> => {
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
@@ -29,16 +44,16 @@ const fetcher = async (url: string) => {
 
 export default function Portfolio() {
   const { user } = useUserProfile();
-  const { data, error, isLoading } = useSWR(
+
+  const router = useRouter();
+  const { data, error, isLoading } = useSWR<{ transactions: Transaction[] }>(
     `${BACKEND_URL}/transactions/`,
     fetcher
   );
 
   const transactions = data?.transactions || [];
 
-  const [filter, setFilter] = useState<
-    "all" | "pending" | "successful" | "failed"
-  >("all");
+  const [filter, setFilter] = useState<Filter>("all");
 
   const statusColor = (status: string) => {
     switch (status) {
@@ -56,7 +71,7 @@ export default function Portfolio() {
   const filteredTransactions =
     filter === "all"
       ? transactions
-      : transactions.filter((txn: any) => txn.status === filter);
+      : transactions.filter((txn) => txn.status === filter);
 
   return (
     <div className="space-y-6 bg-gray-50 min-h-screen w-full">
@@ -142,7 +157,7 @@ export default function Portfolio() {
               key={status}
               variant={filter === status ? "default" : "outline"}
               size="sm"
-              onClick={() => setFilter(status as any)}
+              onClick={() => setFilter(status as Filter)}
               className={cn(
                 "capitalize hover:bg-teal-900 hover:text-white",
                 filter === status ? "bg-teal-900" : ""
@@ -190,7 +205,7 @@ export default function Portfolio() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredTransactions.map((txn: any) => (
+                    {filteredTransactions.map((txn) => (
                       <tr key={txn.id} className="border-b">
                         <td className="px-3 py-2">{txn.reference}</td>
                         <td className="capitalize px-3 py-2">
@@ -224,7 +239,10 @@ export default function Portfolio() {
 
         {/* Start Trading Button */}
         <div className="text-center mt-10 ">
-          <Button className="mt-6 mb-50 px-6 py-2 text-sm md:text-base rounded-lg bg-teal-900 hover:bg-teal-800">
+          <Button
+            onClick={() => router.push("/deposit")}
+            className="mt-6 mb-50 px-6 py-2 text-sm md:text-base rounded-lg bg-teal-900 hover:bg-teal-800"
+          >
             Start Trading
           </Button>
         </div>

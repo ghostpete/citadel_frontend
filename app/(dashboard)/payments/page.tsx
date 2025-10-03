@@ -23,12 +23,27 @@ import {
 } from "@/components/ui/select";
 import { BACKEND_URL } from "@/lib/constants";
 
+// Define payment structure
+interface Payment {
+  id?: number;
+  method_type: string;
+  address?: string;
+  bank_name?: string;
+  bank_account_number?: string;
+  cashapp_id?: string;
+  paypal_email?: string;
+  wallet_type?: string;
+}
+
+// Dynamic form data object
+type PaymentFormData = Partial<Payment>;
+
 const Payments = () => {
   const router = useRouter();
   const [method, setMethod] = useState<string>("");
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<PaymentFormData>({});
   const [loading, setLoading] = useState(false);
-  const [userPayments, setUserPayments] = useState<any[]>([]);
+  const [userPayments, setUserPayments] = useState<Payment[]>([]);
   const [loadingPayments, setLoadingPayments] = useState(true);
 
   // Fetch user’s saved payments
@@ -49,11 +64,11 @@ const Payments = () => {
         const data = await res.json();
 
         // normalize data into an array
-        let payments: any[] = [];
+        let payments: Payment[] = [];
         if (Array.isArray(data)) {
-          payments = data;
+          payments = data as Payment[];
         } else if (data && Array.isArray(data.payments)) {
-          payments = data.payments;
+          payments = data.payments as Payment[];
         }
 
         setUserPayments(payments);
@@ -68,8 +83,8 @@ const Payments = () => {
     fetchPayments();
   }, []);
 
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev: any) => ({
+  const handleChange = (field: keyof PaymentFormData, value: string) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -100,13 +115,11 @@ const Payments = () => {
 
       if (!res.ok) throw new Error("Failed to save payment info");
 
-      
-      alert("Payment info saved successfully!");
-      // re-fetch payments so user sees update
-      const refreshed = await res.json();
+      const refreshed: Payment = await res.json();
       setUserPayments((prev) => [...prev, refreshed]);
       setMethod("");
       setFormData({});
+      alert("Payment info saved successfully!");
     } catch (err) {
       console.error(err);
       alert("Error saving payment info");
@@ -219,7 +232,9 @@ const Payments = () => {
 
       {/* Current Saved Payments */}
       <div className="p-4">
-        <h2 className="font-semibold text-lg mb-3">Your Preferred Payment Methods</h2>
+        <h2 className="font-semibold text-lg mb-3">
+          Your Preferred Payment Methods
+        </h2>
         {loadingPayments ? (
           <p className="text-gray-500">Loading...</p>
         ) : userPayments.length === 0 ? (

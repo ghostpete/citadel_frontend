@@ -1,10 +1,11 @@
 "use client";
 
 import { BACKEND_URL } from "@/lib/constants";
-import { ArrowLeft, Upload, Loader2 } from "lucide-react"; // ✅ add Loader2
+import { ArrowLeft, Upload, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
+import Image from "next/image";
 
 import {
   Select,
@@ -19,7 +20,7 @@ const AccountVerification = () => {
   const [idType, setIdType] = useState("");
   const [idFront, setIdFront] = useState<File | null>(null);
   const [idBack, setIdBack] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false); // ✅ loading state
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ const AccountVerification = () => {
     formData.append("id_back", idBack);
 
     try {
-      setLoading(true); // ✅ start loading
+      setLoading(true);
       const token = localStorage.getItem("authToken");
 
       const res = await fetch(`${BACKEND_URL}/kyc/upload/`, {
@@ -57,7 +58,7 @@ const AccountVerification = () => {
       console.error(error);
       alert("Something went wrong.");
     } finally {
-      setLoading(false); // ✅ stop loading
+      setLoading(false);
     }
   };
 
@@ -70,26 +71,24 @@ const AccountVerification = () => {
         </div>
         <h1 className="text-lg font-semibold">Verify your Account</h1>
       </div>
-      {/* Intro Section */}{" "}
+
+      {/* Intro Section */}
       <div className="p-6 max-w-xl mx-auto text-gray-700">
-        {" "}
-        <h2 className="text-xl font-semibold mb-2">
-          Why Verification Matters
-        </h2>{" "}
+        <h2 className="text-xl font-semibold mb-2">Why Verification Matters</h2>
         <p className="text-sm leading-relaxed">
-          {" "}
           To keep your account secure and to comply with international
           regulations, we require all users to complete a simple Know Your
           Customer (KYC) process. By uploading a valid government-issued ID, you
           help us protect your identity, prevent fraud, and ensure safe access
-          to financial services. <br />{" "}
+          to financial services.
+          <br />
           <span className="font-medium">
-            {" "}
             This process only takes a few minutes and guarantees that your
-            account remains fully active.{" "}
-          </span>{" "}
-        </p>{" "}
+            account remains fully active.
+          </span>
+        </p>
       </div>
+
       {/* Form */}
       <form
         onSubmit={handleSubmit}
@@ -122,10 +121,13 @@ const AccountVerification = () => {
               >
                 <input {...getInputProps()} />
                 {idFront ? (
-                  <img
+                  <Image
                     src={URL.createObjectURL(idFront)}
                     alt="ID Front Preview"
+                    width={300}
+                    height={200}
                     className="max-h-48 object-cover rounded-lg"
+                    unoptimized
                   />
                 ) : (
                   <div className="flex flex-col items-center text-gray-500">
@@ -149,10 +151,13 @@ const AccountVerification = () => {
               >
                 <input {...getInputProps()} />
                 {idBack ? (
-                  <img
+                  <Image
                     src={URL.createObjectURL(idBack)}
                     alt="ID Back Preview"
+                    width={300}
+                    height={200}
                     className="max-h-48 object-cover rounded-lg"
+                    unoptimized
                   />
                 ) : (
                   <div className="flex flex-col items-center text-gray-500">
@@ -165,7 +170,7 @@ const AccountVerification = () => {
           </Dropzone>
         </div>
 
-        {/* Submit Button with Loader */}
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}

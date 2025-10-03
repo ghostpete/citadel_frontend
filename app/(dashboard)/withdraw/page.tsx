@@ -80,9 +80,14 @@ const WithdrawalPage = () => {
 
       alert("Withdrawal request submitted successfully!");
       router.push("/history");
-    } catch (err: any) {
-      console.error(err);
-      alert("Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Error during withdrawal:", err.message);
+        alert(err.message);
+      } else {
+        console.error("Unexpected error:", err);
+        alert("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }

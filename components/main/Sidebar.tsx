@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
 import {
   Select,
   SelectTrigger,
@@ -9,7 +9,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import useLiveAssets from "@/hooks/useLiveAssets";
 
 // Grouped assets
 const assets = {
@@ -58,10 +57,6 @@ export default function Sidebar({
 }) {
   const [market, setMarket] = useState<keyof typeof assets>("forex");
 
-  //   const assets = useLiveAssets();
-
-  //   console.log("Live Assets: ", assets);
-
   return (
     <aside className="w-64 border-r bg-white flex flex-col">
       <div className="p-3">
@@ -86,7 +81,7 @@ export default function Sidebar({
             key={a.name}
             className="flex justify-between items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
             onClick={() => {
-              let prefix =
+              const prefix =
                 market === "forex"
                   ? "FX:"
                   : market === "crypto"

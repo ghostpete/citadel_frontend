@@ -62,6 +62,14 @@ const SocialCopyDeposit = () => {
   const amount = watch("amount");
   const receipt = watch("receipt");
 
+  // ✅ FIX: useDropzone at top level, not inside Controller
+  const { getRootProps, getInputProps } = useDropzone({
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      setValue("receipt", acceptedFiles[0]); // integrate with react-hook-form
+    },
+  });
+
   useEffect(() => {
     setValue("amount", storeAmount.toString());
   }, [storeAmount, setValue]);
@@ -279,42 +287,29 @@ const SocialCopyDeposit = () => {
                 <label className="block mb-2 text-sm font-medium">
                   Upload Receipt
                 </label>
-                <Controller
-                  control={control}
-                  name="receipt"
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    const { getRootProps, getInputProps } = useDropzone({
-                      onDrop: (acceptedFiles) =>
-                        field.onChange(acceptedFiles[0]),
-                    });
-                    return (
-                      <div
-                        {...getRootProps()}
-                        className="w-full border-2 border-dashed rounded-md p-6 text-center cursor-pointer"
-                      >
-                        <input {...getInputProps()} />
-                        {receipt ? (
-                          <div>
-                            <p className="mb-2">{(receipt as File).name}</p>
-                            <Image
-                              src={URL.createObjectURL(receipt as File)}
-                              alt="Receipt Preview"
-                              width={200}
-                              height={200}
-                              className="mx-auto rounded-md"
-                            />
-                          </div>
-                        ) : (
-                          <p className="text-gray-500">
-                            <Upload className="inline-block mr-2 w-4 h-4" />
-                            Drag & drop or click to upload receipt
-                          </p>
-                        )}
-                      </div>
-                    );
-                  }}
-                />
+                <div
+                  {...getRootProps()}
+                  className="w-full border-2 border-dashed rounded-md p-6 text-center cursor-pointer"
+                >
+                  <input {...getInputProps()} />
+                  {receipt ? (
+                    <div>
+                      <p className="mb-2">{(receipt as File).name}</p>
+                      <Image
+                        src={URL.createObjectURL(receipt as File)}
+                        alt="Receipt Preview"
+                        width={200}
+                        height={200}
+                        className="mx-auto rounded-md"
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-gray-500">
+                      <Upload className="inline-block mr-2 w-4 h-4" />
+                      Drag & drop or click to upload receipt
+                    </p>
+                  )}
+                </div>
               </div>
 
               <button

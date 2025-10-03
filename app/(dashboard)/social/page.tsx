@@ -7,6 +7,20 @@ import { columns, Trader } from "./components/columns";
 import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/lib/constants";
 
+// Define the response type from Django API
+type TraderApiResponse = {
+  id: number;
+  name: string;
+  country: string;
+  avatar: string; // cloudinary URL
+  gain: string | number; // may come as string from API
+  risk: string;
+  capital: string | number;
+  copiers: number;
+  avg_trade_time: string;
+  trades: number;
+};
+
 export default function CopyTradersPage() {
   const [activeTab, setActiveTab] = useState("All Categories");
   const [traders, setTraders] = useState<Trader[]>([]);
@@ -19,23 +33,21 @@ export default function CopyTradersPage() {
       try {
         const res = await fetch(`${BACKEND_URL}/traders/`);
         if (!res.ok) throw new Error("Failed to fetch traders");
-        const data = await res.json();
+        const data: TraderApiResponse[] = await res.json();
 
         // Map Django API fields to your Trader type
-        const formatted: Trader[] = data.map((t: any, index: number) => ({
+        const formatted: Trader[] = data.map((t, index: number) => ({
           id: t.id || index,
           name: t.name,
           country: t.country,
-          avatar: t.avatar, // cloudinary URL
-          gain: parseFloat(t.gain),
-          risk: t.risk,
-          capital: `$${t.capital}`, // stored as string in backend
+          avatar: t.avatar,
+          gain: typeof t.gain === "string" ? parseFloat(t.gain) : t.gain,
+          risk: typeof t.risk === "string" ? parseFloat(t.risk) : t.risk, // ✅ fixed here
+          capital: `$${t.capital}`,
           copiers: t.copiers,
           avgTradeTime: t.avg_trade_time,
           trades: t.trades,
         }));
-
-        console.log(formatted);
 
         setTraders(formatted);
       } catch (err) {

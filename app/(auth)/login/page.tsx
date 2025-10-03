@@ -6,7 +6,6 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
-import { useAuthStore } from "@/hooks/useAuthStore";
 import { useRouter } from "next/navigation";
 
 type FormValues = {
@@ -20,7 +19,6 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const authToken = useAuthStore();
 
   const {
     register,
@@ -59,19 +57,6 @@ const LoginPage = () => {
       // Save token
       localStorage.setItem("authToken", result.token);
 
-      // 🔹 Immediately validate token before redirect
-      // const validateRes = await fetch(`${BACKEND_URL}/validate-token/`, {
-      //   method: "GET",
-      //   headers: {
-      //     Authorization: `Token ${result.token}`,
-      //   },
-      // });
-
-      // if (!validateRes.ok) {
-      //   alert("⚠️ Invalid token received. Please try again.");
-      //   localStorage.removeItem("authToken");
-      //   return;
-      // }
 
       alert("✅ Login successful");
       router.push("/portfolio");

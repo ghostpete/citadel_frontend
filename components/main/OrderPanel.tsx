@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -106,7 +106,7 @@ export default function OrderPanel() {
             <SelectItem value="0.2">0.2</SelectItem>
             <SelectItem value="0.3">0.3</SelectItem>
             <SelectItem value="0.4">0.4</SelectItem>
-            <SelectItem value="0.5 ">0.5 </SelectItem>
+            <SelectItem value="0.5">0.5</SelectItem>
             <SelectItem value="0.6">0.6</SelectItem>
             <SelectItem value="0.7">0.7</SelectItem>
             <SelectItem value="0.8">0.8</SelectItem>
@@ -137,7 +137,7 @@ export default function OrderPanel() {
             <div className="flex items-center gap-2">
               <Select
                 value={stopUnit}
-                onValueChange={(v) => setStopUnit(v as any)}
+                onValueChange={(v: "pips" | "price") => setStopUnit(v)}
               >
                 <SelectTrigger className="h-8 text-xs flex-1">
                   <SelectValue />
@@ -202,7 +202,10 @@ export default function OrderPanel() {
         {tpEnabled && (
           <div className="border border-gray-100 rounded-md p-2">
             <div className="flex items-center gap-2">
-              <Select value={tpUnit} onValueChange={(v) => setTpUnit(v as any)}>
+              <Select
+                value={tpUnit}
+                onValueChange={(v: "pips" | "price") => setTpUnit(v)}
+              >
                 <SelectTrigger className="h-8 text-xs flex-1">
                   <SelectValue />
                 </SelectTrigger>

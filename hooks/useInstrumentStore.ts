@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+
 export interface Instrument {
   symbol: string;
-  flag: string;
+  flag?: string; // ✅ optional
   change: number;
   bid: number;
   ask: number;

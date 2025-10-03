@@ -32,7 +32,7 @@ const menuItems = [
 ];
 
 export default function MenuPage() {
-  const { error, loading, user } = useUserProfile();
+  const { user } = useUserProfile();
 
   console.log(user);
 

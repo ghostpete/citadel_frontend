@@ -4,17 +4,30 @@ import { useState, useEffect, useMemo } from "react";
 import { Search, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useInstrumentStore } from "@/hooks/useInstrumentStore";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/lib/constants";
 
+
+
+export interface Instrument {
+  symbol: string;
+  flag?: string; // ✅ optional
+  change: number;
+  bid: number;
+  ask: number;
+  low: number;
+  high: number;
+  time: string;
+}
+
+
 export default function MarketWatch() {
-  const [assets, setAssets] = useState<Record<string, any[]>>({});
+  const [assets, setAssets] = useState<Record<string, Instrument[]>>({});
   const [filter, setFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const setInstrument = useInstrumentStore((s) => s.setInstrument);
   const router = useRouter();
-  const pathname = usePathname();
 
   // Fetch grouped assets from backend
   useEffect(() => {
@@ -27,7 +40,7 @@ export default function MarketWatch() {
           headers: { Authorization: `Token ${authToken}` },
         });
         if (!res.ok) throw new Error("Failed to fetch assets");
-        const data = await res.json();
+        const data: Record<string, Instrument[]> = await res.json();
         setAssets(data);
       } catch (error) {
         console.error("Error fetching assets:", error);
@@ -37,8 +50,8 @@ export default function MarketWatch() {
   }, []);
 
   // Combine all assets if "All" is selected
-  const displayedAssets = useMemo(() => {
-    let allAssets: any[] = [];
+  const displayedAssets: Instrument[] = useMemo(() => {
+    let allAssets: Instrument[] = [];
 
     if (filter === "All") {
       Object.values(assets).forEach((list) => {
