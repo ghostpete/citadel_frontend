@@ -1,6 +1,5 @@
 "use client";
 
-import { useUserProfile } from "@/hooks/useUserProfile";
 import { ArrowLeft, Copy, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -95,7 +94,6 @@ const DropzoneField = ({
 
 const DepositPage = () => {
   const router = useRouter();
-  const { user: _user } = useUserProfile(); // prefixed to avoid ESLint unused var error
   const [wallets, setWallets] = useState<AdminWallet[]>([]);
   const [selectedWallet, setSelectedWallet] = useState<AdminWallet | null>(
     null
@@ -229,6 +227,11 @@ const DepositPage = () => {
           onChange={(e) => setUnit(e.target.value)}
           className="mt-4 border p-2 py-3 rounded-none"
         />
+        {unit === "" && (
+          <p className="text-red-600 text-xs mt-1">
+            Please enter the number of units.
+          </p>
+        )}
 
         {/* Calculated Amount */}
         <Input

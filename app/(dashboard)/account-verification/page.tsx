@@ -103,9 +103,11 @@ const AccountVerification = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="passport">Passport</SelectItem>
-              <SelectItem value="drivers_license">Driver’s License</SelectItem>
+              <SelectItem value="drivers_license">
+                Driver&apos;s License
+              </SelectItem>
               <SelectItem value="national_id">National ID</SelectItem>
-              <SelectItem value="voter_card">Voter's Card</SelectItem>
+              <SelectItem value="voter_card">Voter&apos;s Card</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -2,10 +2,21 @@
 
 import { useEffect, useRef } from "react";
 
-// Declare TradingView globally so TypeScript knows about it
+// Define TradingView widget type (function, not constructor)
 declare global {
   interface Window {
-    TradingView: any;
+    TradingView: {
+      widget: (options: {
+        autosize: boolean;
+        symbol: string;
+        interval: string;
+        timezone: string;
+        theme: string;
+        style: string;
+        locale: string;
+        container_id: string;
+      }) => void;
+    };
   }
 }
 
@@ -23,7 +34,7 @@ export default function TradingChart({ symbol }: { symbol?: string | null }) {
     script.async = true;
     script.onload = () => {
       if (window.TradingView) {
-        new window.TradingView.widget({
+        window.TradingView.widget({
           autosize: true,
           symbol: symbol || "EURUSD", // fallback if null
           interval: "1",
