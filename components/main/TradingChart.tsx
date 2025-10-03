@@ -15,7 +15,7 @@ export default function TradingChart({ symbol }: { symbol?: string | null }) {
     script.src = "https://s3.tradingview.com/tv.js";
     script.async = true;
     script.onload = () => {
-      // @ts-ignore
+      // @ts-expect-error TradingView is injected by script
       new TradingView.widget({
         autosize: true,
         symbol: symbol,
