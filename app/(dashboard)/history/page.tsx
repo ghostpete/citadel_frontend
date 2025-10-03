@@ -88,13 +88,7 @@ const TransactionHistory = () => {
         {/* No transactions */}
         {!isLoading && transactions.length === 0 && (
           <div className="flex flex-col items-center justify-center mt-20 text-center">
-            {/* <Image
-              src="/empty.png"
-              alt="No transactions"
-              width={400}
-              height={400}
-              className=" mb-6 opacity-80"
-            /> */}
+            
             <Inbox className="w-15 h-15 md:w-20 md:h-20 text-gray-300 mx-auto" />
             <h2 className="text-lg font-semibold text-gray-700">
               No Transactions Found
@@ -116,6 +110,7 @@ const TransactionHistory = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead>S/N</TableHead>
                       <TableHead>Reference</TableHead>
                       <TableHead>Type</TableHead>
                       <TableHead>Amount</TableHead>
@@ -124,15 +119,22 @@ const TransactionHistory = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {transactions.map((txn: any) => (
+                    {transactions.map((txn: any, index: number) => (
                       <TableRow key={txn.id}>
+                        <TableCell className="font-medium">
+                          {index + 1}
+                        </TableCell>
                         <TableCell className="font-medium">
                           {txn.reference}
                         </TableCell>
-                        <TableCell>{txn.transaction_type}</TableCell>
+                        <TableCell className="capitalize">
+                          {txn.transaction_type}
+                        </TableCell>
                         <TableCell>${txn.amount}</TableCell>
                         <TableCell>
-                          <Badge className={statusColor(txn.status)}>
+                          <Badge
+                            className={statusColor(txn.status) + " capitalize"}
+                          >
                             {txn.status}
                           </Badge>
                         </TableCell>
@@ -151,11 +153,16 @@ const TransactionHistory = () => {
         {/* Mobile Cards */}
         {transactions.length > 0 && (
           <div className="space-y-3 sm:hidden mb-20">
-            {transactions.map((txn: any) => (
+            {transactions.map((txn: any, index: number) => (
               <Card key={txn.id}>
-                <CardContent className="p-4">
+                <CardContent className="p-4 py-2">
+                  <div className="bg-teal-900 text-white w-8 h-8 flex items-center justify-center rounded-full mb-3">
+                    {index + 1}
+                  </div>
                   <div className="flex justify-between items-center mb-2">
-                    <h2 className="font-semibold">{txn.transaction_type}</h2>
+                    <h2 className="font-semibold capitalize">
+                      {txn.transaction_type}
+                    </h2>
                     <Badge className={statusColor(txn.status)}>
                       {txn.status}
                     </Badge>
@@ -163,7 +170,9 @@ const TransactionHistory = () => {
                   <p className="text-sm text-gray-600">
                     Reference: {txn.reference}
                   </p>
-                  <p className="text-sm">Amount: ${txn.amount}</p>
+                  <p className="font-bold text-sm">
+                    Amount: <span className="text-teal-800">${txn.amount}</span>
+                  </p>
                   <p className="text-sm text-gray-500">
                     {new Date(txn.created_at).toLocaleDateString()}
                   </p>

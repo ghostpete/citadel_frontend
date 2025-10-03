@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export type Trader = {
   id: number;
@@ -18,20 +19,39 @@ export type Trader = {
   trades: number;
 };
 
+// ✅ ActionButton component (can use hooks safely)
+function ActionButton({ id }: { id: number }) {
+  const router = useRouter();
+  return (
+    <Button
+      size="sm"
+      className="bg-teal-600 rounded-none px-6 hover:bg-teal-700 text-white"
+      onClick={() => router.push(`/social/${id}`)}
+    >
+      COPY
+    </Button>
+  );
+}
+
 export const columns: ColumnDef<Trader>[] = [
   {
     accessorKey: "name",
     header: "Leader Name",
     cell: ({ row }) => {
       const trader = row.original;
+
+      const avatarUrl =
+        trader.avatar && trader.avatar.startsWith("http")
+          ? trader.avatar
+          : "/default-avatar.png";
       return (
         <div className="flex items-center gap-3">
           <Image
-            src={trader.avatar}
+            src={avatarUrl}
             alt={trader.name}
             width={45}
             height={45}
-            className="rounded-full"
+            className="rounded-full h-10 w-10 object-cover"
           />
           <span className="truncate max-w-[120px] md:max-w-none text-[16px]">
             {trader.name}
@@ -95,20 +115,8 @@ export const columns: ColumnDef<Trader>[] = [
     header: "Trades",
   },
   {
-    id: "fav",
-    header: "Fav",
-    cell: () => <Star size={18} className="text-gray-500 cursor-pointer" />,
-  },
-  {
     id: "actions",
     header: "Action",
-    cell: () => (
-      <Button
-        size="sm"
-        className="bg-teal-600 rounded-none px-6 hover:bg-teal-700 text-white"
-      >
-        COPY
-      </Button>
-    ),
+    cell: ({ row }) => <ActionButton id={row.original.id} />,
   },
 ];

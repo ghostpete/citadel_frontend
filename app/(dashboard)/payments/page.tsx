@@ -219,7 +219,7 @@ const Payments = () => {
 
       {/* Current Saved Payments */}
       <div className="p-4">
-        <h2 className="font-semibold text-lg mb-3">Your Saved Payments</h2>
+        <h2 className="font-semibold text-lg mb-3">Your Preferred Payment Methods</h2>
         {loadingPayments ? (
           <p className="text-gray-500">Loading...</p>
         ) : userPayments.length === 0 ? (

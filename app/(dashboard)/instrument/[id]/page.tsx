@@ -50,7 +50,7 @@ export default function InstrumentPage() {
 
   useEffect(() => {
     if (!instrument) {
-      router.push("/");
+      router.push("/instrument");
     }
   }, [instrument, router]);
 
@@ -96,7 +96,7 @@ export default function InstrumentPage() {
         </div>
 
         {/* Fixed Buy/Sell Buttons */}
-        <div className="fixed bottom-20 lg:bottom-6 md:left-1/2 md:-translate-x-1/2 right-0 flex gap-2 w-full md:w-1/3 px-2">
+        {/* <div className="fixed bottom-20 lg:bottom-6 md:left-1/2 md:-translate-x-1/2 right-0 flex gap-2 w-full md:w-1/3 px-2">
           <button
             onClick={() => setTradeType("sell")}
             className="flex-1 rounded-md bg-red-600 hover:bg-red-500 cursor-pointer text-white px-2 py-3 text-sm md:text-xl font-bold uppercase"
@@ -109,7 +109,7 @@ export default function InstrumentPage() {
           >
             Buy {ask}
           </button>
-        </div>
+        </div> */}
 
         {/* Trade Popup Modal */}
         {tradeType && (

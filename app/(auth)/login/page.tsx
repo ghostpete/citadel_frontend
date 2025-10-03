@@ -48,7 +48,6 @@ const LoginPage = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        // Show backend error if available
         const backendError =
           result?.error || "Something went wrong. Please try again.";
         alert(`❌ ${backendError}`);
@@ -56,12 +55,25 @@ const LoginPage = () => {
       }
 
       console.log("Login success:", result);
-      alert("✅ Login successful");
 
-      // You can store the token in localStorage/sessionStorage
+      // Save token
       localStorage.setItem("authToken", result.token);
-      const token = result.token;
-      authToken.setToken(token);
+
+      // 🔹 Immediately validate token before redirect
+      // const validateRes = await fetch(`${BACKEND_URL}/validate-token/`, {
+      //   method: "GET",
+      //   headers: {
+      //     Authorization: `Token ${result.token}`,
+      //   },
+      // });
+
+      // if (!validateRes.ok) {
+      //   alert("⚠️ Invalid token received. Please try again.");
+      //   localStorage.removeItem("authToken");
+      //   return;
+      // }
+
+      alert("✅ Login successful");
       router.push("/portfolio");
     } catch (error) {
       console.error(error);
