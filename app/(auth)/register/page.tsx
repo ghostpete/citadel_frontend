@@ -141,9 +141,9 @@ const SignUpPage = () => {
     >
       {/* Header */}
       <div className="flex items-center bg-teal-900 text-white px-4 py-3">
-        <Link href="/menu">
+        <div onClick={() => router.push("/")}>
           <ArrowLeft className="w-6 h-6 mr-3" />
-        </Link>
+        </div>
         <h1 className="text-lg font-semibold">Sign Up</h1>
       </div>
 

@@ -74,9 +74,9 @@ const LoginPage = () => {
         className="font-poppins min-h-screen bg-center bg-cover"
       >
         <div className="flex items-center bg-teal-900 text-white px-4 py-3">
-          <Link href="/menu">
+          <div onClick={() => router.push("/")}>
             <ArrowLeft className="w-6 h-6 mr-3" />
-          </Link>
+          </div>
           <h1 className="text-lg font-semibold">Login</h1>
         </div>
 
