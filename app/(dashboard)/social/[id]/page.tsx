@@ -8,6 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft } from "lucide-react";
 import { BACKEND_URL } from "@/lib/constants";
 import { useDepositStore } from "@/hooks/useDepositStore";
+import { useUserProfile } from "@/hooks/useUserProfile";
+
+import { toast } from "sonner";
 
 type Trader = {
   id: number;
@@ -25,6 +28,8 @@ type Trader = {
 export default function CopyTradePageDetail() {
   const { id } = useParams(); // get [id] from URL
   const router = useRouter();
+
+  const { user } = useUserProfile();
 
   const [trader, setTrader] = useState<Trader | null>(null);
   const [loading, setLoading] = useState(true);
@@ -56,6 +61,16 @@ export default function CopyTradePageDetail() {
   const handleDecrease = () => amount > 50 && setAmount(amount - 50);
 
   const handleDeposit = () => {
+    if (!user?.is_verified) {
+      toast("KYC Verification", {
+        description: "You must verify your KYC before performing this action.",
+        action: {
+          label: "Verify KYC",
+          onClick: () => router.push("/account-verification"),
+        },
+      });
+      return;
+    }
     setGlobalAmount(amount); // ✅ Save to global state
     router.push("/social/deposit"); // Navigate
   };

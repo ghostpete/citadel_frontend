@@ -8,6 +8,7 @@ import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
 import { formatDate } from "@/lib/utils";
+import { toast } from "sonner";
 
 type TicketFormValues = {
   subject: string;
@@ -58,7 +59,9 @@ const ServiceDesk = () => {
       setTickets(data);
     } catch (err) {
       console.error(err);
-      alert("Unable to load tickets.");
+       toast("Ticket Error", {
+         description: "Unable to load tickets.",
+       });
     }
   };
 
@@ -71,7 +74,9 @@ const ServiceDesk = () => {
     setLoading(true);
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("No authentication token found");
+      toast("Bad Auth", {
+        description: "No authentication token found",
+      });
       setLoading(false);
       router.push("/login");
       return;
@@ -89,13 +94,17 @@ const ServiceDesk = () => {
 
       if (!res.ok) throw new Error("Failed to create ticket");
       await res.json();
-      alert("Ticket created successfully");
+      toast("Success", {
+        description: "Ticket created successfully",
+      });
 
       reset();
       fetchTickets();
     } catch (err) {
       console.error(err);
-      alert("An error occurred while creating ticket.");
+      toast("Error", {
+        description: "An error occurred while creating ticket.",
+      });
     } finally {
       setLoading(false);
     }

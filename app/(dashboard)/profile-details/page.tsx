@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 type FormValues = {
   firstName: string;
@@ -46,7 +47,9 @@ export default function PersonalDetailsPage() {
 
     const token = localStorage.getItem("authToken");
     if (!token) {
-      alert("No authentication token found");
+      toast("Bad Auth", {
+        description: "No authentication token found!",
+      });
       setLoading(false);
       window.location.href = "/login";
       return;
@@ -72,10 +75,14 @@ export default function PersonalDetailsPage() {
       if (!res.ok) throw new Error("Failed to update profile");
 
       const result = await res.json();
-      alert(result.message || "Profile updated successfully");
+      toast("Uploaded", {
+        description: result.message || "Profile updated successfully",
+      });
     } catch (err) {
       console.error(err);
-      alert("An error occurred while updating profile.");
+      toast("Error", {
+        description: "An error occurred while updating profile.",
+      });
     } finally {
       setLoading(false);
     }

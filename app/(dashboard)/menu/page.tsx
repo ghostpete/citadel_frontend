@@ -23,12 +23,7 @@ const menuItems = [
   { label: "Service Desk", icon: HelpCircle, href: "/service" },
   { label: "Withdraw", icon: CircleDollarSign, href: "/withdraw" },
   { label: "Change Password", icon: Key, href: "/change-password" },
-  {
-    label: "Account Verification",
-    icon: CheckCircle,
-    href: "/account-verification",
-    hasDot: true,
-  },
+  
 ];
 
 export default function MenuPage() {
@@ -78,6 +73,19 @@ export default function MenuPage() {
                 </div>
               </Link>
             ))}
+
+            {!user?.is_verified && (
+              <Link
+                href={"/account-verification"}
+                className="flex items-center justify-between p-3 rounded-lg bg-white shadow-sm hover:bg-gray-100 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-teal-700" />
+                  <span className="text-gray-800">Account Verification</span>
+                </div>
+              </Link>
+            )}
+
             <div
               onClick={() => logoutAction()}
               className="flex items-center justify-between p-3 rounded-lg bg-white shadow-sm hover:bg-gray-100 transition"

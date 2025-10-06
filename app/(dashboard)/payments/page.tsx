@@ -22,6 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BACKEND_URL } from "@/lib/constants";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { toast } from "sonner";
 
 // Define payment structure
 interface Payment {
@@ -45,6 +47,8 @@ const Payments = () => {
   const [loading, setLoading] = useState(false);
   const [userPayments, setUserPayments] = useState<Payment[]>([]);
   const [loadingPayments, setLoadingPayments] = useState(true);
+
+  const { user } = useUserProfile();
 
   // Fetch user’s saved payments
   useEffect(() => {
@@ -91,8 +95,21 @@ const Payments = () => {
   };
 
   const handleSubmit = async () => {
+    if (!user?.is_verified) {
+      toast("KYC Verification", {
+        description: "You must verify your KYC before performing this action.",
+        action: {
+          label: "Verify KYC",
+          onClick: () => router.push("/account-verification"),
+        },
+      });
+      return;
+    }
+
     if (!method) {
-      alert("Please select a payment method");
+      toast("Payment Method", {
+        description: "Please select a payment method.",
+      });
       return;
     }
 
@@ -119,10 +136,14 @@ const Payments = () => {
       setUserPayments((prev) => [...prev, refreshed]);
       setMethod("");
       setFormData({});
-      alert("Payment info saved successfully!");
+      toast("Saved", {
+        description: "Payment info saved successfully!",
+      });
     } catch (err) {
       console.error(err);
-      alert("Error saving payment info");
+      toast("Error", {
+        description: "Error saving payment info",
+      });
     } finally {
       setLoading(false);
     }

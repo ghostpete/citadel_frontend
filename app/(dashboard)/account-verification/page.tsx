@@ -14,6 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { BeatLoader } from "react-spinners";
+import { toast } from "sonner";
 
 const AccountVerification = () => {
   const router = useRouter();
@@ -22,11 +25,15 @@ const AccountVerification = () => {
   const [idBack, setIdBack] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const { user, loading: userDataIsLoading } = useUserProfile();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!idType || !idFront || !idBack) {
-      alert("Please fill in all fields.");
+      toast("Required Fields.", {
+        description: "You must fill all the fields.",
+      });
       return;
     }
 
@@ -49,14 +56,25 @@ const AccountVerification = () => {
 
       const data = await res.json();
       if (res.ok) {
-        alert("KYC uploaded successfully!");
-        console.log(data);
+        toast("Uploaded Successfully.", {
+          description: "Your KYC was uploaded successfully.",
+        });
+        // console.log(data);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
       } else {
-        alert(data.error || "Upload failed.");
+
+        toast.error("Upload Failed.", {
+          description: data.error || "Something went wrong.",
+        });
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      toast("Upload Failed.", {
+        description: "Something went wrong.",
+      });
     } finally {
       setLoading(false);
     }
@@ -72,122 +90,147 @@ const AccountVerification = () => {
         <h1 className="text-lg font-semibold">Verify your Account</h1>
       </div>
 
+      {userDataIsLoading && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black/30 flex items-center justify-center">
+          <BeatLoader color="#fff" className="text-white" />
+        </div>
+      )}
+
       {/* Intro Section */}
-      <div className="p-6 max-w-xl mx-auto text-gray-700">
-        <h2 className="text-xl font-semibold mb-2">Why Verification Matters</h2>
-        <p className="text-sm leading-relaxed">
-          To keep your account secure and to comply with international
-          regulations, we require all users to complete a simple Know Your
-          Customer (KYC) process. By uploading a valid government-issued ID, you
-          help us protect your identity, prevent fraud, and ensure safe access
-          to financial services.
-          <br />
-          <span className="font-medium">
-            This process only takes a few minutes and guarantees that your
-            account remains fully active.
-          </span>
-        </p>
-      </div>
+
+      {user?.has_submitted_kyc ? (
+        <div className="p-6 max-w-xl mx-auto text-gray-700">
+          <h2 className="text-xl font-semibold mb-2">KYC Pending</h2>
+          <p className="text-sm leading-relaxed">
+            Please be patient with us. Your KYC is being evaluated.
+            <br />
+            <span className="font-medium">Thanks for your time.</span>
+          </p>
+        </div>
+      ) : (
+        <div className="p-6 max-w-xl mx-auto text-gray-700">
+          <h2 className="text-xl font-semibold mb-2">
+            Why Verification Matters
+          </h2>
+          <p className="text-sm leading-relaxed">
+            To keep your account secure and to comply with international
+            regulations, we require all users to complete a simple Know Your
+            Customer (KYC) process. By uploading a valid government-issued ID,
+            you help us protect your identity, prevent fraud, and ensure safe
+            access to financial services.
+            <br />
+            <span className="font-medium">
+              This process only takes a few minutes and guarantees that your
+              account remains fully active.
+            </span>
+          </p>
+        </div>
+      )}
 
       {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-6 p-6 max-w-xl mx-auto w-full"
-      >
-        {/* ID Type */}
-        <div>
-          <label className="block text-sm font-medium mb-2">ID Type</label>
-          <Select value={idType} onValueChange={(val) => setIdType(val)}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select ID Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="passport">Passport</SelectItem>
-              <SelectItem value="drivers_license">
-                Driver&apos;s License
-              </SelectItem>
-              <SelectItem value="national_id">National ID</SelectItem>
-              <SelectItem value="voter_card">Voter&apos;s Card</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
-        {/* ID Front Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Front of ID</label>
-          <Dropzone onDrop={(files) => setIdFront(files[0])}>
-            {({ getRootProps, getInputProps }) => (
-              <div
-                {...getRootProps()}
-                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-teal-500 transition"
-              >
-                <input {...getInputProps()} />
-                {idFront ? (
-                  <Image
-                    src={URL.createObjectURL(idFront)}
-                    alt="ID Front Preview"
-                    width={300}
-                    height={200}
-                    className="max-h-48 object-cover rounded-lg"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex flex-col items-center text-gray-500">
-                    <Upload className="w-10 h-10 mb-2" />
-                    <p>Drop front image here or click to upload</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </Dropzone>
-        </div>
-
-        {/* ID Back Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Back of ID</label>
-          <Dropzone onDrop={(files) => setIdBack(files[0])}>
-            {({ getRootProps, getInputProps }) => (
-              <div
-                {...getRootProps()}
-                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-teal-500 transition"
-              >
-                <input {...getInputProps()} />
-                {idBack ? (
-                  <Image
-                    src={URL.createObjectURL(idBack)}
-                    alt="ID Back Preview"
-                    width={300}
-                    height={200}
-                    className="max-h-48 object-cover rounded-lg"
-                    unoptimized
-                  />
-                ) : (
-                  <div className="flex flex-col items-center text-gray-500">
-                    <Upload className="w-10 h-10 mb-2" />
-                    <p>Drop back image here or click to upload</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </Dropzone>
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex items-center justify-center gap-2 bg-teal-900 text-white py-2 px-4 rounded-lg hover:bg-teal-800 transition disabled:opacity-50 disabled:cursor-not-allowed mb-20"
+      {!user?.has_submitted_kyc && (
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6 p-6 max-w-xl mx-auto w-full"
         >
-          {loading ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              Uploading...
-            </>
-          ) : (
-            "Submit Verification"
-          )}
-        </button>
-      </form>
+          {/* ID Type */}
+          <div>
+            <label className="block text-sm font-medium mb-2">ID Type</label>
+            <Select value={idType} onValueChange={(val) => setIdType(val)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select ID Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="passport">Passport</SelectItem>
+                <SelectItem value="drivers_license">
+                  Driver&apos;s License
+                </SelectItem>
+                <SelectItem value="national_id">National ID</SelectItem>
+                <SelectItem value="voter_card">Voter&apos;s Card</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* ID Front Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Front of ID
+            </label>
+            <Dropzone onDrop={(files) => setIdFront(files[0])}>
+              {({ getRootProps, getInputProps }) => (
+                <div
+                  {...getRootProps()}
+                  className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-teal-500 transition"
+                >
+                  <input {...getInputProps()} />
+                  {idFront ? (
+                    <Image
+                      src={URL.createObjectURL(idFront)}
+                      alt="ID Front Preview"
+                      width={300}
+                      height={200}
+                      className="max-h-48 object-cover rounded-lg"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center text-gray-500">
+                      <Upload className="w-10 h-10 mb-2" />
+                      <p>Drop front image here or click to upload</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Dropzone>
+          </div>
+
+          {/* ID Back Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Back of ID</label>
+            <Dropzone onDrop={(files) => setIdBack(files[0])}>
+              {({ getRootProps, getInputProps }) => (
+                <div
+                  {...getRootProps()}
+                  className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-6 cursor-pointer hover:border-teal-500 transition"
+                >
+                  <input {...getInputProps()} />
+                  {idBack ? (
+                    <Image
+                      src={URL.createObjectURL(idBack)}
+                      alt="ID Back Preview"
+                      width={300}
+                      height={200}
+                      className="max-h-48 object-cover rounded-lg"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center text-gray-500">
+                      <Upload className="w-10 h-10 mb-2" />
+                      <p>Drop back image here or click to upload</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Dropzone>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex items-center justify-center gap-2 bg-teal-900 text-white py-2 px-4 rounded-lg hover:bg-teal-800 transition disabled:opacity-50 disabled:cursor-not-allowed mb-20"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              "Submit Verification"
+            )}
+          </button>
+        </form>
+      )}
     </div>
   );
 };

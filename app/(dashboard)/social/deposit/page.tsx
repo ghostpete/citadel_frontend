@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface Wallet {
   id: number;
@@ -142,11 +143,15 @@ const SocialCopyDeposit = () => {
 
       reset();
       setOpen(false);
-      alert("Deposit submitted successfully!");
+      toast("Success", {
+        description: "Deposit submitted successfully!",
+      });
       router.push("/history");
     } catch (err) {
       console.error("Error submitting deposit:", err);
-      alert("Something went wrong. Please try again.");
+      toast("Error", {
+        description: "Something went wrong. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,7 @@ import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "sonner";
 
 type FormValues = {
   firstName: string;
@@ -118,18 +119,30 @@ const SignUpPage = () => {
 
       if (!response.ok) {
         if (Array.isArray(result.error)) {
-          alert(result.error.join("\n"));
+          
+
+          toast("Error", {
+            description: result.error.join("\n"),
+          });
+
+          
         } else {
-          alert(result.error || "Registration failed ❌");
+          toast("Error", {
+            description: result.error || "Registration failed ❌",
+          });
         }
         return;
       }
 
-      alert(result.message || "Registration successful ✅");
+      toast("Error", {
+        description: result.message || "Registration successful ✅",
+      });
       router.push("/login");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong, please try again ❌");
+      toast("Error", {
+        description: "Something went wrong, please try again ❌",
+      });
     } finally {
       setLoading(false);
     }

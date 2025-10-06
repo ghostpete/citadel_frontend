@@ -4,6 +4,8 @@ import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
 
+import { Toaster } from "@/components/ui/sonner";
+
 const poppins = Poppins({
   // pick the weights you need
   weight: ["300", "400", "500", "600", "700"],
@@ -28,6 +30,21 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} font-sans antialiased`}>
         {children}
+        <Toaster
+          position="top-right" // positions: top-left, top-center, bottom-right, etc.
+          richColors // enables colored toasts
+          theme="dark" // "light" | "dark" | "system"
+          toastOptions={{
+            style: {
+              background: "#134E4A", // custom background color
+              color: "#fff", // text color
+              borderRadius: "10px",
+              border: "1px solid #134E4A",
+              fontSize: "14px",
+            },
+            className: "shadow-lg", // optional Tailwind class
+          }}
+        />
         <Analytics />
       </body>
     </html>

@@ -22,6 +22,8 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useForm, Controller } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
+import { useUserProfile } from "@/hooks/useUserProfile";
+import { toast } from "sonner";
 
 interface AdminWallet {
   id: number;
@@ -103,6 +105,8 @@ const DepositPage = () => {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const { user } = useUserProfile();
+
   const {
     control,
     handleSubmit,
@@ -129,6 +133,16 @@ const DepositPage = () => {
   }, []);
 
   const handleChoose = () => {
+    if (!user?.is_verified) {
+      toast("KYC Verification", {
+        description: "You must verify your KYC before performing this action.",
+        action: {
+          label: "Verify KYC",
+          onClick: () => router.push("/account-verification"),
+        },
+      });
+      return;
+    }
     if (selectedWallet && unit) setOpen(true);
   };
 
@@ -172,9 +186,12 @@ const DepositPage = () => {
       reset();
       setUnit("");
       setOpen(false);
-      alert(
-        "Transaction made successfully. Your deposits are pending at the moment."
-      );
+      
+
+      toast("Transaction Successful.", {
+        description:
+          "Transaction made successfully. Your deposits are pending at the moment.",
+      });
       router.push("/history");
     } catch (err) {
       console.error(err);

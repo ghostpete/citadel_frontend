@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -18,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BACKEND_URL } from "@/lib/constants";
+import { toast } from "sonner";
 
 type WithdrawalForm = {
   asset: "balance" | "equity" | "user_funds" | "free_margin";
@@ -53,6 +55,16 @@ const WithdrawalPage = () => {
   const selectedAsset = watch("asset");
 
   const onSubmit = async (data: WithdrawalForm) => {
+    if (!user?.is_verified) {
+      toast("KYC Verification", {
+        description: "You must verify your KYC before performing this action.",
+        action: {
+          label: "Verify KYC",
+          onClick: () => router.push("/account-verification"),
+        },
+      });
+      return;
+    }
     const availableBalance = user?.[data.asset] ?? 0;
 
     if (data.amount > availableBalance) {
@@ -77,16 +89,20 @@ const WithdrawalPage = () => {
       if (!res.ok) {
         throw new Error("Withdrawal failed");
       }
-
-      alert("Withdrawal request submitted successfully!");
+       toast("Success", {
+         description: "Withdrawal request submitted successfully!",
+       });
       router.push("/history");
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error("Error during withdrawal:", err.message);
-        alert(err.message);
+        toast("Error", {
+          description: err.message || "Something went wrong. Please try again.",
+        });
       } else {
         console.error("Unexpected error:", err);
-        alert("Something went wrong");
+        toast("Error", {
+          description: "Something went wrong. Please try again.",
+        });
       }
     } finally {
       setLoading(false);

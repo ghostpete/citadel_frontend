@@ -8,6 +8,7 @@ import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { toast } from "sonner";
 
 type FormValues = {
   email: string;
@@ -48,7 +49,10 @@ const LoginPage = () => {
       if (!response.ok) {
         const backendError =
           result?.error || "Something went wrong. Please try again.";
-        alert(`❌ ${backendError}`);
+
+        toast("Error", {
+          description: backendError,
+        });
         return;
       }
 
@@ -57,11 +61,15 @@ const LoginPage = () => {
       // Save token
       localStorage.setItem("authToken", result.token);
 
-      alert("✅ Login successful");
+      toast("Success", {
+        description: "✅ Login successful",
+      });
       router.push("/portfolio");
     } catch (error) {
       console.error(error);
-      alert("⚠️ Network error. Please try again.");
+      toast("Network Error", {
+        description: "⚠️ Network error. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
