@@ -64,7 +64,7 @@ const ForexPage = () => {
         </Container>
       </section>{" "}
       <BackgroundFact
-        title={"Start Your Stock Trading Journey with CitadelMarketPro"}
+        title={"Start Your Forex Trading Journey with CitadelMarketPro"}
         text={`CitadelMarketPro equips you with a suite of exclusive tools
               designed to enhance your trading experience. Our goal is to
               accelerate your learning process, ensuring a smooth and successful
