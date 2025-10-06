@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PulseLoader } from "react-spinners";
 import { BACKEND_URL } from "@/lib/constants";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type FormValues = {
   firstName: string;
@@ -147,8 +148,18 @@ const SignUpPage = () => {
         <h1 className="text-lg font-semibold">Sign Up</h1>
       </div>
 
+      <Link href="/" className="flex items-center flex-col space-x-2">
+        <Image
+          src="/images/logo.png"
+          alt="CitadelMarketPro"
+          className="w-20 h-20 md:w-30 md:h-30"
+          width={100}
+          height={100}
+        />
+      </Link>
+
       {/* Main Container */}
-      <div className="flex flex-col border shadow-md bg-white p-5 md:rounded-xl max-w-full md:max-w-xl mx-auto md:h-fit md:mb-10 md:mt-10 w-full">
+      <div className="flex flex-col md:border shadow-md bg-white p-5 md:rounded-xl max-w-full md:max-w-xl mx-auto md:h-fit md:mb-10 md:mt-10 w-full">
         <div className="px-4 py-3">
           <h2 className="text-2xl md:text-3xl font-bold text-teal-900">
             Sign Up
@@ -275,8 +286,7 @@ const SignUpPage = () => {
               {/* Country Calling Code */}
               <input
                 type="text"
-                value={locationData.country_calling_code || ""}
-                readOnly
+                defaultValue={locationData.country_calling_code || ""}
                 className="w-16 md:w-20 border-b p-2 outline-none text-gray-500 bg-gray-100 mr-2 text-center"
               />
               {/* User Phone Input */}
@@ -299,8 +309,7 @@ const SignUpPage = () => {
               <input
                 type="text"
                 {...register("country")}
-                value={locationData.country || ""}
-                readOnly
+                defaultValue={locationData.country || ""}
                 className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
               />
             </div>
@@ -310,8 +319,7 @@ const SignUpPage = () => {
               <input
                 type="text"
                 {...register("region")}
-                value={locationData.region || ""}
-                readOnly
+                defaultValue={locationData.region || ""}
                 className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
               />
             </div>
@@ -321,8 +329,7 @@ const SignUpPage = () => {
               <input
                 type="text"
                 {...register("city")}
-                value={locationData.city || ""}
-                readOnly
+                defaultValue={locationData.city || ""}
                 className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
               />
             </div>
@@ -332,8 +339,7 @@ const SignUpPage = () => {
               <input
                 type="text"
                 {...register("currency")}
-                value={locationData.currency || ""}
-                readOnly
+                defaultValue={locationData.currency || ""}
                 className="w-full border-b p-2 outline-none text-gray-500 bg-gray-100"
               />
             </div>

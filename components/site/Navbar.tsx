@@ -39,14 +39,14 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/images/icon-umarketpro.svg"
+            src="/images/logo.png"
             alt="CitadelMarketPro"
             className="w-10 h-10"
             width={100}
             height={100}
           />
-          <span className="text-xl font-bold text-gray-800">
-            Citadel<span className="text-[#00C896]">MarketPro</span>
+          <span className="text-lg font-bold text-gray-800">
+            CitadelMarket<sup className="text-black">Pro</sup>
           </span>
         </Link>
 

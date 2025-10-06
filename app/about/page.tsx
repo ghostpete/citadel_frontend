@@ -133,7 +133,7 @@ const AboutPage = () => {
                 asChild
                 className="bg-[#00C896] hover:bg-[#00926d] text-white rounded-full px-7 py-5 font-semibold transition"
               >
-                <Link href="/login">Explore More</Link>
+                <Link href="/register">Open an Account</Link>
               </Button>
             </div>
           </div>
@@ -155,10 +155,7 @@ const AboutPage = () => {
                 asChild
                 className="bg-[#00C896] hover:bg-[#00926d] text-white rounded-full px-7 py-5 font-semibold transition"
               >
-                <Link
-                  href="/learn-more"
-                  className="inline-flex items-center gap-2"
-                >
+                <Link href="/about" className="inline-flex items-center gap-2">
                   Learn More
                   <span className="text-lg">→</span>
                 </Link>

@@ -21,7 +21,7 @@ const StocksPage: React.FC = () => {
         style={{ backgroundImage: "url(/images/chart-bckg.webp)" }}
       >
         {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/40 bottom-0 h-full"></div>
+        <div className="absolute inset-0 left-0 right-0 bg-black/40 bottom-0 h-screen"></div>
 
         <Container>
           <div className="relative z-10 flex items-center flex-col md:flex-row gap-6 sm:gap-6 justify-between h-full text-white">
@@ -52,7 +52,7 @@ const StocksPage: React.FC = () => {
             {/* Right side image (decorative) */}
             <div className="flex-1 p-2 md:p-6 hidden sm:block">
               <Image
-                src="/images/business-hero.jpg"
+                src="/images/pro_woman_1.jpg"
                 alt="stock hero"
                 width={900}
                 height={700}
@@ -101,8 +101,8 @@ const StocksPage: React.FC = () => {
                 User-Friendly Interface
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed break-words">
-                CitadelMarketPro provides an intuitive platform designed to enhance
-                the trading experience for both novice and experienced
+                CitadelMarketPro provides an intuitive platform designed to
+                enhance the trading experience for both novice and experienced
                 investors.
               </p>
             </div>
@@ -129,8 +129,9 @@ const StocksPage: React.FC = () => {
                 Cost-Effective Trading Structure
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed break-words">
-                CitadelMarketPro offers competitive pricing with zero commissions,
-                making stock trading more affordable and accessible.
+                CitadelMarketPro offers competitive pricing with zero
+                commissions, making stock trading more affordable and
+                accessible.
               </p>
             </div>
 
@@ -188,7 +189,7 @@ const StocksPage: React.FC = () => {
 
             <div className="flex justify-center md:justify-end">
               <Image
-                src="/images/confidence-1.jpg"
+                src="/images/pro_woman_2.jpg"
                 alt="Transform investments"
                 width={600}
                 height={400}

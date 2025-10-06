@@ -52,7 +52,7 @@ export default function Hero() {
             {/* Right side - Image */}
             <div className="flex-1 p-4 md:p-4 lg:p-10">
               <Image
-                src="/images/business-hero.jpg"
+                src="/images/happy-business.jpg"
                 alt="hero image"
                 width={1536}
                 height={1348}
@@ -73,7 +73,7 @@ export default function Hero() {
                 <Image
                   width={173}
                   height={150}
-                  src="/images/icon-umarketpro.svg"
+                  src="/images/logo.png"
                   alt="logo"
                 />
               </div>
@@ -119,10 +119,7 @@ export default function Hero() {
                 asChild
                 className="bg-[#00C896] hover:bg-[#00926d] text-white rounded-full px-7 py-5 font-semibold transition"
               >
-                <Link
-                  href="/learn-more"
-                  className="inline-flex items-center gap-2"
-                >
+                <Link href="/about" className="inline-flex items-center gap-2">
                   Learn More
                   <span className="text-lg">→</span>
                 </Link>
@@ -262,7 +259,7 @@ export default function Hero() {
           <div className="p-3">
             <div className="h-60 sm:h-70">
               <Image
-                src="/images/business-1.jpg"
+                src="/images/stock-bg-c.jpg"
                 alt="Business Vision"
                 width={700}
                 height={500}
@@ -291,7 +288,7 @@ export default function Hero() {
           <div className="p-3">
             <div className="h-60 sm:h-70">
               <Image
-                src="/images/business-2.jpg"
+                src="/images/love-stock.jpg"
                 alt="Business Strategy"
                 width={700}
                 height={500}
@@ -312,7 +309,7 @@ export default function Hero() {
                 asChild
                 className="bg-[#00C896] hover:bg-[#00926d] text-white rounded-full px-7 py-5 font-semibold transition"
               >
-                <Link href="/login">Explore More</Link>
+                <Link href="/about">Explore More</Link>
               </Button>
             </div>
           </div>

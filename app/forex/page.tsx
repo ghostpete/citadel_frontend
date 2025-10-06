@@ -53,7 +53,7 @@ const ForexPage = () => {
               {" "}
               {/* container controls size */}
               <Image
-                src="/images/business-hero.jpg"
+                src="/images/stock-proper.jpg"
                 alt="hero image"
                 width={1536}
                 height={1348}
@@ -106,7 +106,7 @@ const ForexPage = () => {
             {/* Right Image */}
             <div className="flex-1 flex justify-center md:justify-end">
               <Image
-                src="/images/confidence-1.jpg"
+                src="/images/stock-image-1.jpg"
                 alt="Trade with confidence"
                 width={600}
                 height={400}
@@ -120,7 +120,7 @@ const ForexPage = () => {
             {/* Left Image */}
             <div className="flex-1 flex justify-center md:justify-start">
               <Image
-                src="/images/confidence-2.jpg"
+                src="/images/stock-work.jpg"
                 alt="Maximized Returns, Minimized Risks"
                 width={600}
                 height={400}
@@ -161,10 +161,7 @@ const ForexPage = () => {
                 asChild
                 className="bg-[#00C896] hover:bg-[#00926d] text-white rounded-full px-7 py-5 font-semibold transition"
               >
-                <Link
-                  href="/learn-more"
-                  className="inline-flex items-center gap-2"
-                >
+                <Link href="/about" className="inline-flex items-center gap-2">
                   Learn More
                   <span className="text-lg">→</span>
                 </Link>
