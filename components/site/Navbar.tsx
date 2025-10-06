@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -37,10 +38,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <img
+          <Image
             src="/images/icon-umarketpro.svg"
             alt="CitadelMarketPro"
             className="w-10 h-10"
+            width={100}
+            height={100}
           />
           <span className="text-xl font-bold text-gray-800">
             Citadel<span className="text-[#00C896]">MarketPro</span>
