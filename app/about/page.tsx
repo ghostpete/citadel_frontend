@@ -57,7 +57,7 @@ const AboutPage = () => {
               {" "}
               {/* container controls size */}
               <Image
-                src="/images/business-hero.jpg"
+                src="/images/young-woman-working.jpg"
                 alt="hero image"
                 width={1536}
                 height={1348}
@@ -73,7 +73,7 @@ const AboutPage = () => {
             {/* Left Image */}
             <div className="h-60 sm:h-70">
               <Image
-                src="/images/business-1.jpg"
+                src="/images/stock-work.jpg"
                 alt="Business Vision"
                 width={700}
                 height={500}
@@ -107,7 +107,7 @@ const AboutPage = () => {
             {/* Text in the Top */}
             <div className="hh-60 sm:h-70">
               <Image
-                src="/images/business-2.jpg"
+                src="/images/about-1.jpg"
                 alt="Business Strategy"
                 width={700}
                 height={500}
