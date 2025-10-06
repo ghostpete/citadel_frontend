@@ -11,6 +11,7 @@ import { BACKEND_URL as BACKEND_URL_API } from "@/lib/constants";
 import useSWR from "swr";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const BACKEND_URL = BACKEND_URL_API;
 
@@ -82,18 +83,22 @@ export default function Portfolio() {
             PT Live #{user?.account_id || "2738288335"}
           </h2>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold">
-              {getFirstLetter(user?.first_name)}
-            </div>
-            <div className="hidden lg:block">
-              <h2 className="font-semibold text-lg">
-                {user?.first_name} {user?.last_name}
-              </h2>
-              <p className="text-sm flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
-                Live account
-              </p>
-            </div>
+            <Link href={"/menu"}>
+              <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-lg font-bold">
+                {getFirstLetter(user?.first_name)}
+              </div>
+            </Link>
+            <Link href={"/menu"}>
+              <div className="hidden lg:block">
+                <h2 className="font-semibold text-lg">
+                  {user?.first_name} {user?.last_name}
+                </h2>
+                <p className="text-sm flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
+                  Live account
+                </p>
+              </div>
+            </Link>
           </div>
         </div>
 

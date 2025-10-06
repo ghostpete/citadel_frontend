@@ -6,6 +6,7 @@ import { DataTable } from "./components/data-table";
 import { columns, Trader } from "./components/columns";
 import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/lib/constants";
+import { BeatLoader } from "react-spinners";
 
 // Define the response type from Django API
 type TraderApiResponse = {
@@ -90,8 +91,8 @@ export default function CopyTradersPage() {
 
         {/* Loader */}
         {loading ? (
-          <div className="flex justify-center items-center h-40 text-gray-500">
-            Loading traders...
+          <div className="flex flex-1 items-center justify-center mt-20">
+            <BeatLoader color="#0f766e" size={10} />
           </div>
         ) : (
           <DataTable columns={columns} data={traders} />

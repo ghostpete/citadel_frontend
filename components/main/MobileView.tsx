@@ -6,12 +6,11 @@ import Image from "next/image";
 import { useInstrumentStore } from "@/hooks/useInstrumentStore";
 import { useRouter } from "next/navigation";
 import { BACKEND_URL } from "@/lib/constants";
-
-
+import { BeatLoader } from "react-spinners";
 
 export interface Instrument {
   symbol: string;
-  flag?: string; // ✅ optional
+  flag?: string;
   change: number;
   bid: number;
   ask: number;
@@ -20,11 +19,11 @@ export interface Instrument {
   time: string;
 }
 
-
 export default function MarketWatch() {
   const [assets, setAssets] = useState<Record<string, Instrument[]>>({});
   const [filter, setFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true); // ✅ Loader state added
 
   const setInstrument = useInstrumentStore((s) => s.setInstrument);
   const router = useRouter();
@@ -35,6 +34,7 @@ export default function MarketWatch() {
       const authToken = localStorage.getItem("authToken");
 
       try {
+        setLoading(true); // ✅ Start loading
         const res = await fetch(`${BACKEND_URL}/assets/grouped/`, {
           method: "GET",
           headers: { Authorization: `Token ${authToken}` },
@@ -44,6 +44,8 @@ export default function MarketWatch() {
         setAssets(data);
       } catch (error) {
         console.error("Error fetching assets:", error);
+      } finally {
+        setLoading(false); // ✅ Stop loading
       }
     };
     fetchAssets();
@@ -125,59 +127,72 @@ export default function MarketWatch() {
         </div>
       </div>
 
-      {/* Instruments List */}
-      <div className="flex-1 overflow-y-auto">
-        {displayedAssets.map((item) => (
-          <div
-            onClick={() => {
-              setInstrument(item);
-              router.push(`/instrument/${item.symbol}`);
-            }}
-            key={item.symbol}
-            className="cursor-pointer px-2 md:px-3 py-2 border-b flex items-center justify-between hover:bg-gray-50 transition"
-          >
-            {/* Left Side */}
-            <div>
-              <div className="flex items-center gap-2">
-                {item.flag && (
-                  <Image
-                    src={item.flag}
-                    width={28}
-                    height={28}
-                    alt={item.symbol}
-                    className="md:w-[40px] md:h-[40px]"
-                  />
-                )}
-
-                <span className="font-semibold text-xs md:text-base">
-                  {item.symbol}
-                </span>
-                <span
-                  className={`text-[10px] md:text-xs font-medium ${
-                    item.change >= 0 ? "text-[#00B074]" : "text-red-600"
-                  }`}
-                >
-                  {item.change >= 0 ? "+" : ""}
-                  {item.change}%
-                </span>
-              </div>
-              <div className="text-[10px] md:text-[11px] text-gray-500">
-                {item.time} &nbsp; L:{item.low} &nbsp; H:{item.high}
-              </div>
+      {/* ✅ Loader */}
+      {loading ? (
+        <div className="flex flex-1 items-center justify-center mt-20">
+          <BeatLoader color="#0f766e" size={10} />
+        </div>
+      ) : (
+        /* Instruments List */
+        <div className="flex-1 overflow-y-auto">
+          {displayedAssets.length === 0 ? (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              No instruments found.
             </div>
+          ) : (
+            displayedAssets.map((item) => (
+              <div
+                onClick={() => {
+                  setInstrument(item);
+                  router.push(`/instrument/${item.symbol}`);
+                }}
+                key={item.symbol}
+                className="cursor-pointer px-2 md:px-3 py-2 border-b flex items-center justify-between hover:bg-gray-50 transition"
+              >
+                {/* Left Side */}
+                <div>
+                  <div className="flex items-center gap-2">
+                    {item.flag && (
+                      <Image
+                        src={item.flag}
+                        width={28}
+                        height={28}
+                        alt={item.symbol}
+                        className="md:w-[40px] md:h-[40px]"
+                      />
+                    )}
 
-            {/* Right Side (Bid / Ask) */}
-            <div className="flex items-center gap-1 md:gap-2">
-              <button className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-[10px] md:text-sm shadow">
-                {item.bid}
-              </button>
-              <button className="px-2 py-1 bg-[#00B074] hover:bg-[#00915e] text-white rounded text-[10px] md:text-sm shadow">
-                {item.ask}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+                    <span className="font-semibold text-xs md:text-base">
+                      {item.symbol}
+                    </span>
+                    <span
+                      className={`text-[10px] md:text-xs font-medium ${
+                        item.change >= 0 ? "text-[#00B074]" : "text-red-600"
+                      }`}
+                    >
+                      {item.change >= 0 ? "+" : ""}
+                      {item.change}%
+                    </span>
+                  </div>
+                  <div className="text-[10px] md:text-[11px] text-gray-500">
+                    {item.time} &nbsp; L:{item.low} &nbsp; H:{item.high}
+                  </div>
+                </div>
+
+                {/* Right Side (Bid / Ask) */}
+                <div className="flex items-center gap-1 md:gap-2">
+                  <button className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-[10px] md:text-sm shadow">
+                    {item.bid}
+                  </button>
+                  <button className="px-2 py-1 bg-[#00B074] hover:bg-[#00915e] text-white rounded text-[10px] md:text-sm shadow">
+                    {item.ask}
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

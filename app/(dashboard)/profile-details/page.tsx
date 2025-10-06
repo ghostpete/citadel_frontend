@@ -186,7 +186,7 @@ export default function PersonalDetailsPage() {
         <div>
           <label className="block text-sm text-gray-500">Country</label>
           <Input
-            disabled
+            // disabled
             {...register("country", { required: "Country is required" })}
             className="w-full border-b text-gray-800 bg-gray-100 rounded-none"
           />
@@ -199,7 +199,7 @@ export default function PersonalDetailsPage() {
         <div>
           <label className="block text-sm text-gray-500">City</label>
           <Input
-            disabled
+            // disabled
             {...register("city", { required: "City is required" })}
             className="w-full border-b text-gray-800 bg-gray-100 rounded-none"
           />
